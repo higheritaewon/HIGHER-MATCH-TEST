@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>HIGHER MATCH</title>
+<!-- ✅ Google Fonts: Do Hyeon -->
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0c1a3a;
+    --yellow:#ffd94d;
+    --bg:#0f1730;
+    --card:#131e3f;
+    --text:#f4f6ff;
+    --muted:#97a2c9;
+    --danger:#ff6b6b;
+    --success:#2dd4bf;
+    --badge:#24346a;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:linear-gradient(180deg,var(--bg),#0a142e 55%,#08102a);
+    color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Pretendard,Apple SD Gothic Neo,Helvetica,Arial,sans-serif;
+    font-size:16.5px; line-height:1.5; /* ⬆ 가독성 */
+  }
+  .container{max-width:520px;margin:0 auto;padding:18px 14px 32px}
+  .card{
+    background:rgba(19,30,63,.72);
+    backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:16px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  h1,h2,h3{margin:0 0 14px}
+  h1.title{
+    font-size:30px; letter-spacing:.8px; text-align:center; margin-top:8px;
+    background:linear-gradient(90deg,#fff,var(--yellow)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    font-family: 'Do Hyeon', sans-serif;
+  }
+  .page-title{
+    text-align:center; font-size:24px; margin-bottom:8px;
+    font-family: 'Do Hyeon', sans-serif;
+  }
+  .subtitle{color:var(--muted); font-size:14px; text-align:center; margin-top:-6px; margin-bottom:14px}
+
+  /* 로고 */
+  .logo-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin:8px 0 16px}
+  .logo{
+    width:240px;height:auto;object-fit:contain;display:block;border-radius:12px;border:1px dashed rgba(255,255,255,.15);background:#0b1532;
+  }
+  .logo-mini{ /* 기능 페이지 상단 로고 */
+    width:200px;height:auto;object-fit:contain;display:block;border-radius:12px;border:1px dashed rgba(255,255,255,.15);background:#0b1532;margin:0 auto 8px;
+  }
+
+  .row{display:flex;gap:10px}
+  input,button,textarea,select{
+    width:100%; padding:14px 13px; border-radius:12px;
+    border:1px solid rgba(255,255,255,.08); background:#0b1532; color:var(--text); font-size:16.5px;
+  }
+  input::placeholder,textarea::placeholder{color:#7e8bb8}
+  textarea{resize:none; min-height:96px}
+  button{cursor:pointer; font-weight:800; letter-spacing:.2px}
+  .btn{background:#13265a}
+  .btn:hover{filter:brightness(1.06)}
+  .btn-primary{background:var(--yellow); color:#1a1a1a; border-color:#0000}
+  .btn-accent{background:#1a2b63; border:1px solid #2a3b7a}
+  .btn-like{background:#1c2f6e; border:1px solid #2e4aa7}
+  .btn-focus{outline:2px solid var(--yellow)}
+  .btn-danger{background:var(--danger)}
+  .btn-success{background:var(--success); color:#0e2824}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .tile{
+    display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;
+    padding:18px 12px; border-radius:14px; text-align:center; min-height:100px; background:#0f1f4b; border:1px solid rgba(255,255,255,.06)
+  }
+  .tile strong{font-size:17px; font-family:'Do Hyeon', sans-serif;}
+  .tile.like{background:#14265a; border:1px solid #29418d; box-shadow:0 0 0 2px rgba(41,65,141,.25) inset}
+  .tile.like strong{ color: var(--yellow); }
+
+  .muted{color:var(--muted); font-size:14px}
+  .small{font-size:12.5px}
+  .center{text-align:center}
+  .spacer{height:10px}
+  .footerbar{
+    margin-top:16px; display:flex; align-items:center; justify-content:space-between; gap:10px; color:var(--muted); font-size:12.5px
+  }
+  .list{display:flex;flex-direction:column; gap:10px}
+  .list-item{
+    display:flex; align-items:center; gap:10px;
+    padding:12px; border-radius:12px; background:#0d1a3e; border:1px solid rgba(255,255,255,.06)
+  }
+  .hidden{display:none !important}
+
+  /* “다른사람 구경하기” 행 레이아웃: 내용 2/3, 버튼 1/3 */
+  .li-content{ flex: 2; min-width:0; }
+  .li-actions{ flex: 1; display:flex; justify-content:flex-end; align-items:stretch; }
+  .li-actions .btn-like{ width:100%; }
+
+  /* 큰 배지(남은 LIKE 수 표시용) */
+  .big-badge{
+    display:flex; align-items:center; justify-content:center;
+    background:var(--badge); border:1px solid rgba(255,255,255,.08);
+    border-radius:12px; padding:10px 12px; margin:8px 0 12px;
+    font-size:18px; font-weight:800;
+  }
+  .big-badge .num{font-size:22px; margin:0 6px; color:var(--yellow)}
+
+  /* modal */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:50
+  }
+  .modal{
+    width:92%; max-width:460px; background:#0d1534; border:1px solid rgba(255,255,255,.1);
+    border-radius:16px; padding:18px
+  }
+  .modal h3{margin:0 0 10px; font-size:22px}
+  .modal .actions{display:flex; gap:10px; margin-top:12px}
+  .modal #modal-message{font-size:18px; line-height:1.6} /* ⬆ 팝업 글씨 크게 */
+
+  /* 로딩 오버레이 */
+  .loading-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.35);
+    display:none; align-items:center; justify-content:center; z-index:60;
+  }
+  .loading-box{
+    background:#0d1534; border:1px solid rgba(255,255,255,.12);
+    padding:14px 16px; border-radius:12px; font-size:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .spinner{
+    width:16px; height:16px; border:3px solid rgba(255,255,255,.2); border-top-color:#fff;
+    border-radius:50%; animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* 관리자 탭 */
+  .tabs{display:flex; gap:8px; margin:10px 0 12px}
+  .tab{flex:1; padding:10px; text-align:center; border-radius:10px; background:#102457; border:1px solid rgba(255,255,255,.08); cursor:pointer; font-weight:800}
+  .tab.active{background:#17306f; box-shadow:0 0 0 2px rgba(255,255,255,.08) inset}
+  .section{margin-top:6px}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ===== [PAGE] 첫페이지 ===== -->
+  <section id="page-welcome" class="card">
+    <div class="logo-wrap">
+      <img id="logo-main" class="logo" src="https://lh3.googleusercontent.com/d/143lu87wt27PIerpMbBNSViSsHabI0dZd" alt="HIGHER MATCH 로고" />
+    </div>
+    <h1 class="title">하이어에서 내 인연 찾기</h1>
+    <div class="spacer"></div>
+    <div class="row">
+      <input id="login-uid" inputmode="numeric" pattern="[0-9]*" placeholder="나의 고유번호" />
+      <input id="login-pin" inputmode="numeric" pattern="[0-9]*" placeholder="비밀번호(4자리)" maxlength="4" />
+    </div>
+    <div class="spacer"></div>
+    <div class="row">
+      <button class="btn" id="signup-btn">회원가입</button>
+      <button class="btn-primary" id="login-btn">로그인</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="center">
+      <button id="admin-entry-btn" class="btn-accent small">관리자</button>
+    </div>
+    <div class="spacer"></div>
+    <p class="subtitle small"><br/>이벤트용 익명 서비스입니다.<br/>BETA SERVICE @higher_itaewon</p>
+  </section>
+
+  <!-- (디자인 변경으로 예전 상단바는 사용하지 않음) -->
+  <div id="topbar-common" class="hidden"></div>
+
+  <!-- ===== [PAGE] 메뉴 ===== -->
+  <section id="page-menu" class="card hidden">
+    <div class="grid">
+      <button class="tile" id="btn-profile">
+        <strong>프로필 설정하기</strong>
+        <span class="muted small">자기소개·이상형</span>
+      </button>
+      <button class="tile" id="btn-browse">
+        <strong>다른사람 구경하기</strong>
+        <span class="muted small">번호순 프로필</span>
+      </button>
+      <button class="tile like" id="btn-like">
+        <strong>👍 LIKE 보내기</strong>
+        <span class="muted small">번호 입력하여 전송</span>
+      </button>
+      <button class="tile" id="btn-matches">
+        <strong>나의 MATCH 💛</strong>
+        <span class="muted small">만남 요청/수락</span>
+      </button>
+    </div>
+
+    <p id="login-status-menu" class="center muted small" style="margin-top:12px;"></p>
+
+    <div class="footerbar">
+      <span></span>
+      <button id="logout-btn" class="btn small">로그아웃</button>
+    </div>
+  </section>
+
+  <!-- ===== [PAGE] 프로필 설정하기 ===== -->
+  <section id="page-profile" class="card hidden">
+    <img class="logo-mini" id="logo-mini-profile" alt="로고" />
+    <h2 class="page-title">나의 프로필 설정하기</h2>
+
+    <p class="muted">내 고유번호: <span class="badge" id="me-uid-profile"></span><br/>*민감하거나 불쾌감을 줄 수 있는 내용 작성은 자제 바랍니다.<br/></p>
+    <textarea id="intro" maxlength="50" placeholder="자기소개 (최대 50자) ex. 오늘 번개 구해요."></textarea>
+    <div class="spacer"></div>
+    <textarea id="ideal" maxlength="50" placeholder="이상형 (최대 50자) ex. 짧은 머리 감자상"></textarea>
+
+    <p id="login-status-profile-top" class="center muted small" style="margin-top:12px;"></p>
+
+    <div class="spacer"></div>
+    <div class="row">
+      <button class="btn" id="profile-cancel">취소</button>
+      <button class="btn-primary" id="profile-save">저장</button>
+    </div>
+    <div class="footerbar">
+      <button id="to-menu1" class="btn small">메뉴</button>
+      <button id="logout-btn1" class="btn small">로그아웃</button>
+    </div>
+  </section>
+
+  <!-- ===== [PAGE] 다른사람 구경하기 ===== -->
+  <section id="page-browse" class="card hidden">
+    <img class="logo-mini" id="logo-mini-browse" alt="로고" />
+    <h2 class="page-title">다른사람 구경하기 👓</h2>
+
+    <!-- 번호 검색 -->
+    <div class="row" style="margin-bottom:8px;">
+      <input id="browse-search" inputmode="numeric" pattern="[0-9]*" placeholder="번호로 검색 (예: 12)" />
+      <button id="browse-search-btn" class="btn">검색</button>
+    </div>
+
+    <!-- 남은 LIKE 수 -->
+    <div id="like-remaining-browse" class="big-badge hidden">남은 LIKE: <span class="num" id="remain-browse">0</span>회</div>
+
+    <div id="browse-list" class="list"></div>
+
+    <p id="login-status-browse-top" class="center muted small" style="margin-top:12px;"></p>
+
+    <div class="footerbar">
+      <button id="to-menu2" class="btn small">메뉴</button>
+      <button id="logout-btn2" class="btn small">로그아웃</button>
+    </div>
+  </section>
+
+  <!-- ===== [PAGE] LIKE 보내기 ===== -->
+  <section id="page-like" class="card hidden">
+    <img class="logo-mini" id="logo-mini-like" alt="로고" />
+    <h2 class="page-title">👍 LIKE 보내기</h2>
+
+    <!-- 남은 LIKE 수 -->
+    <div id="like-remaining-like" class="big-badge hidden">남은 LIKE: <span class="num" id="remain-like">0</span>회</div>
+
+    <div class="row">
+      <input id="from-like" disabled />
+      <input id="to-like" inputmode="numeric" pattern="[0-9]*" placeholder="상대 고유번호 입력" />
+    </div>
+    <div class="spacer"></div>
+    <button id="send-like-btn" class="btn-like btn-focus">LIKE 보내기 👍</button>
+    <p class="muted small" style="margin-top:10px;">※ 존재하지 않는 번호로는 전송되지 않습니다.</p>
+
+    <p id="login-status-like-top" class="center muted small" style="margin-top:12px;"></p>
+
+    <div class="footerbar">
+      <button id="to-menu3" class="btn small">메뉴</button>
+      <button id="logout-btn3" class="btn small">로그아웃</button>
+    </div>
+  </section>
+
+  <!-- ===== [PAGE] 나의 MATCH 현황보기 ===== -->
+  <section id="page-matches" class="card hidden">
+    <img class="logo-mini" id="logo-mini-matches" alt="로고" />
+    <h2 class="page-title">나의 MATCH 현황 💛</h2>
+
+    <!-- 내가 받은 '만남 요청(보류 중 포함)'을 별도로 표시 -->
+    <div id="incoming-requests" class="section hidden">
+      <h3>내가 받은 만남 요청</h3>
+      <div id="incoming-list" class="list"></div>
+    </div>
+
+    <div id="matches-list" class="list"></div>
+
+    <p id="login-status-matches-top" class="center muted small" style="margin-top:12px;"></p>
+
+    <div class="footerbar">
+      <button id="to-menu4" class="btn small">메뉴</button>
+      <button id="logout-btn4" class="btn small">로그아웃</button>
+    </div>
+  </section>
+
+  <!-- ===== [PAGE] 관리자 게이트 ===== -->
+  <section id="page-admin-gate" class="card hidden">
+    <h2>관리자 로그인</h2>
+    <p class="muted small">관리자 자격은 코드 내부에 고정되어 있습니다.</p>
+    <div class="row">
+      <input id="admin-id" placeholder="관리자 아이디" />
+      <input id="admin-pw" placeholder="관리자 비밀번호" type="password" />
+    </div>
+    <div class="spacer"></div>
+    <div class="row">
+      <button id="admin-cancel" class="btn">취소</button>
+      <button id="admin-login" class="btn-primary">관리자 접속</button>
+    </div>
+  </section>
+
+  <!-- ===== [PAGE] 관리자 ===== -->
+  <section id="page-admin" class="card hidden">
+    <h2>관리자 페이지</h2>
+
+    <div class="spacer"></div>
+    <div class="row">
+      <input id="event-id-input" placeholder="이벤트 ID (예: 2025-10-05-night)" />
+      <button id="apply-event-id" class="btn">이벤트ID 적용</button>
+    </div>
+    <p class="small muted">현재 이벤트: <span class="badge" id="current-event"></span></p>
+
+    <!-- 탭 -->
+    <div class="tabs">
+      <div class="tab active" data-tab="tab-matches">매치현황</div>
+      <div class="tab" data-tab="tab-accepted">만남성사</div>
+      <div class="tab" data-tab="tab-user">사용자 조회/설정</div>
+    </div>
+
+    <!-- 매치현황 -->
+    <div id="tab-matches" class="section">
+      <h3 style="margin-top:6px">매치 현황(쌍방)</h3>
+      <div id="admin-matches" class="list"></div>
+      <p class="small">총 커플 수: <span class="count" id="admin-match-count">0</span></p>
+    </div>
+
+    <!-- 만남성사 -->
+    <div id="tab-accepted" class="section hidden">
+      <h3 style="margin-top:6px">만남 성사 목록</h3>
+      <div id="admin-accepted" class="list"></div>
+    </div>
+
+    <!-- 사용자 조회/설정 -->
+    <div id="tab-user" class="section hidden">
+      <h3 style="margin-top:6px">사용자 번호 검색</h3>
+      <div class="row">
+        <input id="admin-user-search" inputmode="numeric" pattern="[0-9]*" placeholder="번호 입력" />
+        <button id="admin-user-search-btn" class="btn">조회</button>
+      </div>
+      <div class="spacer"></div>
+      <div id="admin-user-panel" class="hidden">
+        <div class="big-badge">LIKE 한도: <span class="num" id="admin-user-remain">0</span>회 남음</div>
+        <div class="row">
+          <button id="admin-like-dec" class="btn">-1</button>
+          <button id="admin-like-inc" class="btn">+1</button>
+          <button id="admin-like-set5" class="btn">기본 5로 설정</button>
+        </div>
+        <div class="spacer"></div>
+        <h4>보낸 LIKE</h4>
+        <div id="admin-user-sent" class="list"></div>
+        <h4>받은 LIKE</h4>
+        <div id="admin-user-recv" class="list"></div>
+      </div>
+
+      <div class="spacer"></div>
+      <h3 style="margin-top:16px">개별 사용자 삭제</h3>
+      <div class="row">
+        <input id="admin-del-uid" placeholder="삭제할 고유번호" inputmode="numeric" pattern="[0-9]*" />
+        <button id="admin-del-user" class="btn-danger">해당 사용자 데이터 삭제</button>
+      </div>
+
+      <h3 style="margin-top:16px">이벤트 전체 초기화</h3>
+      <button id="admin-reset" class="btn-danger">모든 계정/데이터 완전 삭제</button>
+    </div>
+
+    <div class="spacer"></div>
+    <button id="admin-logout" class="btn small">관리자 로그아웃</button>
+  </section>
+
+</div>
+
+<!-- ===== 기본 모달 ===== -->
+<div id="modal" class="modal-backdrop">
+  <div class="modal">
+    <h3 id="modal-title">알림</h3>
+    <div id="modal-message" class="muted" style="white-space:pre-line"></div>
+    <div class="actions" id="modal-actions">
+      <button id="modal-ok" class="btn-primary">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 로딩(대기 안내) 오버레이 ===== -->
+<div id="loading" class="loading-backdrop">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <div>처리 중입니다...</div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import {
+    getDatabase, ref, get, set, update, onValue, remove,
+    onChildAdded, runTransaction
+  } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  // ===================== 환경 설정 =====================
+  const firebaseConfig = {
+    apiKey: "AIzaSyCqbEKdH4awWRuKRsrV-RNS5Xu7ApZebMA",
+  authDomain: "highermatch6589.firebaseapp.com",
+  databaseURL: "https://highermatch6589-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "highermatch6589",
+  storageBucket: "highermatch6589.firebasestorage.app",
+  messagingSenderId: "1042310064025",
+  appId: "1:1042310064025:web:fb5fbcce8342d7f6c61508",
+  measurementId: "G-L6BBBBVYNV"
+  };
+
+  let EVENT_ID = localStorage.getItem("hm_event_id") || "defaultEvent";
+  const ADMIN_ID = "admin";
+  const ADMIN_PASSWORD = "higher1011!";
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const auth = getAuth(app);
+
+  // 익명 로그인
+  signInAnonymously(auth).catch(console.error);
+  function authReady(){
+    return new Promise((resolve)=>{
+      if(auth.currentUser) return resolve(auth.currentUser);
+      const unsub = onAuthStateChanged(auth, (u)=>{unsub(); resolve(u);});
+    });
+  }
+
+  // ===================== 상태 =====================
+  let currentUid = null;
+  let currentPin = null;
+  let adminLoggedIn = false;
+
+  // ===================== DOM 헬퍼 =====================
+  const $ = s => document.querySelector(s);
+  function show(el){
+    el.classList.remove("hidden");
+    if (el.classList.contains("modal-backdrop") || el.classList.contains("loading-backdrop")) {
+      el.style.display = "flex";
+    }
+  }
+  function hide(el){
+    el.classList.add("hidden");
+    if (el.classList.contains("modal-backdrop") || el.classList.contains("loading-backdrop")) {
+      el.style.display = "none";
+    }
+  }
+
+  const loadingEl = $("#loading");
+  const withLoading = async (fn) => { try{ show(loadingEl); await fn(); } finally{ hide(loadingEl); } };
+
+  const pages = {
+    welcome: $("#page-welcome"),
+    menu: $("#page-menu"),
+    profile: $("#page-profile"),
+    browse: $("#page-browse"),
+    like: $("#page-like"),
+    matches: $("#page-matches"),
+    adminGate: $("#page-admin-gate"),
+    admin: $("#page-admin")
+  };
+
+  const logoMain = $("#logo-main");
+
+  function setAllMiniLogos(){
+    document.querySelectorAll(".logo-mini").forEach(img=>{
+      img.src = logoMain.src;
+    });
+  }
+  setAllMiniLogos();
+
+  // ===================== 모달 =====================
+  const modal = $("#modal");
+  const modalTitle = $("#modal-title");
+  const modalMsg = $("#modal-message");
+  const modalActions = $("#modal-actions");
+
+  function alertModal(message, title="알림"){
+    if (loadingEl) hide(loadingEl);
+    return new Promise(res=>{
+      modalTitle.textContent = title;
+      modalMsg.textContent = message;
+      modalActions.innerHTML = `<button id="modal-ok" class="btn-primary">확인</button>`;
+      $("#modal-ok").onclick = ()=>{ hide(modal); res(true); };
+      show(modal);
+    });
+  }
+  function confirmModal(message, {okText="확인", cancelText="취소", title="확인"}={}){
+    if (loadingEl) hide(loadingEl);
+    return new Promise(res=>{
+      modalTitle.textContent = title;
+      modalMsg.textContent = message;
+      modalActions.innerHTML = `
+        <button id="modal-cancel" class="btn">${cancelText}</button>
+        <button id="modal-ok" class="btn-primary">${okText}</button>`;
+      $("#modal-cancel").onclick = ()=>{ hide(modal); res(false); };
+      $("#modal-ok").onclick = ()=>{ hide(modal); res(true); };
+      show(modal);
+    });
+  }
+  function choiceModal(message){
+    if (loadingEl) hide(loadingEl);
+    return new Promise(res=>{
+      modalTitle.textContent = "만남 요청";
+      modalMsg.textContent = message;
+      modalActions.innerHTML = `
+        <button id="modal-decline" class="btn-danger">거절</button>
+        <button id="modal-hold" class="btn">보류</button>
+        <button id="modal-accept" class="btn-primary">수락</button>
+      `;
+      $("#modal-decline").onclick = ()=>{ hide(modal); res(false); };
+      $("#modal-hold").onclick = ()=>{ hide(modal); res(null); };
+      $("#modal-accept").onclick = ()=>{ hide(modal); res(true); };
+      show(modal);
+    });
+  }
+
+  // ===================== DB 유틸 =====================
+  const r = (p)=> ref(db, `events/${EVENT_ID}/${p}`);
+  async function getUser(uid){ const snap = await get(r(`users/${uid}`)); return snap.exists()? snap.val(): null; }
+  async function userExists(uid){ return !!(await getUser(uid)); }
+
+  // LIKE 한도: users/{uid}/likeRemain (초기 5)
+  async function ensureLikeRemain(uid){
+    await runTransaction(r(`users/${uid}/likeRemain`), (cur)=>{
+      if(cur===null || cur===undefined) return 5;
+      return cur;
+    });
+  }
+  async function getLikeRemain(uid){
+    const snap = await get(r(`users/${uid}/likeRemain`));
+    return snap.exists()? Number(snap.val()) : 0;
+  }
+  function setRemainBadges(n){
+    const b1 = $("#like-remaining-like"); const b2 = $("#like-remaining-browse");
+    if(b1){ (n>=0?show:hide)(b1); $("#remain-like").textContent = String(n); }
+    if(b2){ (n>=0?show:hide)(b2); $("#remain-browse").textContent = String(n); }
+  }
+
+  // ===================== 로그인 라벨 업데이트 =====================
+  function updateLoginLabels(){
+    const textTop = currentUid ? `${currentUid}번 님이 로그인 중입니다` : "";
+    ["#login-status-menu",
+     "#login-status-profile-top",
+     "#login-status-browse-top",
+     "#login-status-like-top",
+     "#login-status-matches-top"
+    ].forEach(sel=>{ const el=$(sel); if(el) el.textContent=textTop; });
+
+    const fromLike = $("#from-like");
+    if(fromLike){ fromLike.value = currentUid ? `내 번호: ${currentUid}` : ""; }
+  }
+
+  // ===================== 회원가입/로그인 =====================
+  $("#signup-btn").onclick = async ()=>{
+    await withLoading(async ()=>{
+      try{
+        await authReady();
+        const uid = $("#login-uid").value.trim();
+        const pin = $("#login-pin").value.trim();
+        if(!uid || !/^\d+$/.test(uid)) return alertModal("고유번호는 숫자여야 합니다.");
+        if(!/^\d{4}$/.test(pin)) return alertModal("비밀번호는 숫자 4자리여야 합니다.");
+        if(await userExists(uid)) return alertModal("이미 존재하는 번호입니다. 로그인 해주세요.");
+        await set(r(`users/${uid}`), { pin, intro:"", ideal:"", createdAt: Date.now(), likeRemain: 5 });
+        await alertModal("계정이 생성 되었습니다.");
+      }catch(err){
+        console.error(err);
+        const msg = (err && err.message) ? err.message : String(err);
+        if(String(err && err.code).includes("permission_denied")){
+          alertModal("데이터베이스 권한 오류입니다.\n- Authentication: Anonymous 활성화 확인\n- Database 규칙(.read/.write) 확인", "권한 오류");
+        }else if(msg.includes("databaseURL")){
+          alertModal("firebaseConfig.databaseURL이 올바른지 확인해 주세요.", "설정 오류");
+        }else{
+          alertModal("회원가입 중 오류가 발생했습니다.\n" + msg, "오류");
+        }
+      }
+    });
+  };
+
+  $("#login-btn").onclick = async ()=>{
+    await withLoading(async ()=>{
+      try{
+        await authReady();
+        const uid = $("#login-uid").value.trim();
+        const pin = $("#login-pin").value.trim();
+        if(!uid) return alertModal("고유번호를 입력하세요.");
+        const user = await getUser(uid);
+        if(!user){ return alertModal("해당 번호가 없습니다. 다시 시도해 주시기 바랍니다."); }
+        if(user.pin !== pin){ return alertModal("비밀번호가 일치하지 않습니다. 다시 시도해 주시기 바랍니다."); }
+        currentUid = uid; currentPin = pin;
+        await ensureLikeRemain(currentUid);
+        attachRealtimeListeners();
+        refreshRemain();
+        go("menu");
+      }catch(err){
+        console.error(err);
+        alertModal("로그인 중 오류가 발생했습니다.\n" + ((err && err.message) ? err.message : String(err)));
+      }
+    });
+  };
+
+  async function refreshRemain(){
+    if(!currentUid) return;
+    const n = await getLikeRemain(currentUid);
+    setRemainBadges(n);
+  }
+
+  // 로그아웃
+  function doLogout(){
+    detachRealtimeListeners();
+    currentUid = null; currentPin = null;
+    go("welcome");
+  }
+  ["#logout-btn","#logout-btn1","#logout-btn2","#logout-btn3","#logout-btn4"].forEach(sel=>{
+    const el = $(sel); if(el) el.onclick = doLogout;
+  });
+
+  // 각 페이지의 “메뉴” 버튼 → 메뉴로 이동
+  ["#to-menu1","#to-menu2","#to-menu3","#to-menu4"].forEach(sel=>{
+    const el = $(sel); if(el) el.onclick = ()=> go("menu");
+  });
+
+  // 메뉴 이동
+  $("#btn-profile").onclick = ()=>{ $("#me-uid-profile").textContent = currentUid; loadProfile(); go("profile"); };
+  $("#btn-browse").onclick = ()=>{ loadBrowse(); go("browse"); };
+  $("#btn-like").onclick   = async ()=>{ $("#from-like").value=`내 번호: ${currentUid}`; $("#to-like").value=""; await refreshRemain(); go("like"); };
+  $("#btn-matches").onclick= ()=>{ loadMatches(); go("matches"); };
+
+  // 프로필 저장/취소
+  async function loadProfile(){
+    const u = await getUser(currentUid);
+    $("#intro").value = (u && u.intro)||"";
+    $("#ideal").value = (u && u.ideal)||"";
+  }
+  $("#profile-save").onclick = async ()=>{
+    await withLoading(async ()=>{
+      await update(r(`users/${currentUid}`), {
+        intro: $("#intro").value.trim().slice(0,50),
+        ideal: $("#ideal").value.trim().slice(0,50)
+      });
+      await alertModal("프로필이 저장되었습니다.");
+      go("menu");
+    });
+  };
+  $("#profile-cancel").onclick = ()=>go("menu");
+
+  // 다른사람 구경 (+검색)
+  async function loadBrowse(filterId=null){
+    await refreshRemain();
+    const wrap = $("#browse-list");
+    wrap.innerHTML = "";
+    const snap = await get(r("users"));
+    if(!snap.exists()){ wrap.innerHTML = `<div class="muted small">아직 가입된 사용자가 없습니다.</div>`; return; }
+    const users = snap.val();
+    let ids = Object.keys(users).filter(id=>id!==currentUid);
+    if(filterId){ ids = ids.filter(id=>id===filterId); }
+    ids.sort((a,b)=>Number(a)-Number(b));
+    if(ids.length===0){
+      wrap.innerHTML = `<div class="muted small">해당 번호의 사용자가 없습니다.</div>`;
+      return;
+    }
+    ids.forEach(id=>{
+      const u = users[id];
+      const item = document.createElement("div");
+      item.className="list-item";
+      item.innerHTML = `
+        <div class="li-content">
+          <div><strong>${id}번</strong></div>
+          <div class="small muted" style="margin-top:4px;">자기소개: ${u.intro||"-"}</div>
+          <div class="small muted" style="margin-top:2px;">이상형: ${u.ideal||"-"}</div>
+        </div>
+        <div class="li-actions">
+          <button class="btn-like small" data-like="${id}">LIKE 👍</button>
+        </div>
+      `;
+      wrap.appendChild(item);
+    });
+    wrap.querySelectorAll("[data-like]").forEach(btn=>{
+      btn.onclick = ()=> sendLike(btn.getAttribute("data-like"));
+    });
+  }
+  $("#browse-search-btn").onclick = ()=>{
+    const q = $("#browse-search").value.trim();
+    if(!q) return loadBrowse(null);
+    if(!/^\d+$/.test(q)) return alertModal("숫자만 입력해주세요.");
+    loadBrowse(q);
+  };
+
+  // LIKE 보내기 (5회 제한 + 트랜잭션)
+  $("#send-like-btn").onclick = async ()=>{
+    const toId = $("#to-like").value.trim();
+    if(!/^\d+$/.test(toId)) return alertModal("상대 고유번호를 숫자로 입력하세요.");
+    await withLoading(async ()=>{ await sendLike(toId); });
+  };
+
+  async function sendLike(toId){
+    if(toId===currentUid) return alertModal("본인에게는 보낼 수 없습니다.");
+    const exists = await userExists(toId);
+    if(!exists) return alertModal("해당 번호가 없습니다. 다시 시도해 주시기 바랍니다.");
+
+    // 이미 보낸 상대면 한도 차감 없이 안내
+    const already = await get(r(`likes/${currentUid}/${toId}`));
+    if(already.exists()){
+      await alertModal("이미 해당 사용자에게 LIKE를 보냈습니다.");
+      return;
+    }
+
+    // 한도 트랜잭션
+    const ok = await new Promise(async (resolve)=>{
+      await runTransaction(r(`users/${currentUid}/likeRemain`), (cur)=>{
+        if(cur===null || cur===undefined) cur=5;
+        if(cur<=0) return cur; // 변경 없으면 abort로 간주되어 fail은 아님. 아래에서 판별
+        return cur-1;
+      }, {applyLocally:false}).then(res=>{
+        resolve(res.committed && res.snapshot.val()>=0);
+      }).catch(()=>resolve(false));
+    });
+    if(!ok){
+      await alertModal("보낼 수 있는 LIKE 횟수가 모두 소진되었습니다.");
+      await refreshRemain();
+      return;
+    }
+
+    // LIKE 기록
+    await set(r(`likes/${currentUid}/${toId}`), { value:true, at: Date.now() });
+
+    // 수신자에게 알림용 flag (실시간 팝업)
+    await set(r(`likeInbox/${toId}/${currentUid}`), { at: Date.now() });
+
+    // 상호 LIKE 확인 → MATCH
+    const reciprocal = await get(r(`likes/${toId}/${currentUid}`));
+    if(reciprocal.exists()){
+      const payload = {status:"matched", updatedAt: Date.now()};
+      await update(r(`matches/${currentUid}/${toId}`), payload);
+      await update(r(`matches/${toId}/${currentUid}`), payload);
+      await alertModal(`${toId}번 사용자와 MATCH가 되었습니다! 매치 현황을 확인해 주시기 바랍니다.`);
+    }else{
+      await alertModal("LIKE가 전송되었습니다.");
+    }
+
+    await refreshRemain();
+  }
+
+  // 나의 MATCH 현황 + 받은 요청(보류 포함) 수동 처리 가능
+  async function loadMatches(){
+    const wrap = $("#matches-list");
+    wrap.innerHTML = "";
+
+    // 받은 만남 요청 표시
+    const incBox = $("#incoming-requests");
+    const incList = $("#incoming-list");
+    const reqSnap = await get(r(`meetingRequests/${currentUid}`));
+    incList.innerHTML = "";
+    if(reqSnap.exists()){
+      show(incBox);
+      const reqs = reqSnap.val();
+      Object.keys(reqs).forEach(fromUid=>{
+        const row = document.createElement("div");
+        row.className="list-item";
+        row.innerHTML = `
+          <div class="li-content">
+            <div><strong>${fromUid}번</strong></div>
+            <div class="small muted">상태: 만남 요청 수신 (보류 중 가능)</div>
+          </div>
+          <div class="li-actions" style="gap:6px;">
+            <button class="btn-danger small" data-inc-decline="${fromUid}">거절</button>
+            <button class="btn-primary small" data-inc-accept="${fromUid}">수락</button>
+          </div>
+        `;
+        incList.appendChild(row);
+      });
+      incList.querySelectorAll("[data-inc-accept]").forEach(btn=>{
+        btn.onclick = async ()=>{
+          const from = btn.getAttribute("data-inc-accept");
+          await withLoading(async ()=>{
+            await update(r(`matches/${currentUid}/${from}`), {status:"meeting_accepted", updatedAt: Date.now()});
+            await update(r(`matches/${from}/${currentUid}`), {status:"meeting_accepted", updatedAt: Date.now()});
+            await remove(r(`meetingRequests/${currentUid}/${from}`));
+          });
+          await alertModal("만남이 성사되었습니다. 지금바로 만남을 위해 직원에게 문의하세요!");
+          loadMatches();
+        };
+      });
+      incList.querySelectorAll("[data-inc-decline]").forEach(btn=>{
+        btn.onclick = async ()=>{
+          const from = btn.getAttribute("data-inc-decline");
+          const ok = await confirmModal(`${from}번의 요청을 거절하시겠습니까?`,{okText:"거절"});
+          if(!ok) return;
+          await withLoading(async ()=>{ await clearPairData(currentUid, from); });
+          await alertModal("요청을 거절하고 관련 매치/좋아요 데이터가 정리되었습니다.");
+          loadMatches();
+        };
+      });
+    }else{
+      hide(incBox);
+    }
+
+    // 내 매치 목록
+    const snap = await get(r(`matches/${currentUid}`));
+    if(!snap.exists()){ wrap.innerHTML = `<div class="muted small">아직 매치가 없습니다.</div>`; return; }
+    const list = snap.val();
+    const ids = Object.keys(list).sort((a,b)=>Number(a)-Number(b));
+    ids.forEach(other=>{
+      const m = list[other];
+      const row = document.createElement("div");
+      row.className="list-item";
+      let right = "";
+      if(m.status==="matched"){
+        right = `<button class="btn-success small" data-meet="${other}">만남 요청하기</button>`;
+      }else if(m.status==="meeting_requested"){
+        right = `<span class="small badge">요청 진행중</span>`;
+      }else if(m.status==="meeting_accepted"){
+        right = `
+          <span class="small badge" style="background:#14532d;border-color:#1d7a49">만남 성사</span>
+          <button class="btn small" data-staff="${other}">직원<br/>확인</button>
+        `;
+      }
+      row.innerHTML = `
+        <div class="li-content">
+          <div><strong>${other}번</strong></div>
+          <div class="small muted">상태: ${statusKorean(m.status)}</div>
+        </div>
+        <div class="li-actions">${right}</div>
+      `;
+      wrap.appendChild(row);
+    });
+
+    wrap.querySelectorAll("[data-meet]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        const target = btn.getAttribute("data-meet");
+        await withLoading(async ()=>{
+          await set(r(`meetingRequests/${target}/${currentUid}`), {status:"pending", updatedAt: Date.now()});
+          await update(r(`matches/${currentUid}/${target}`), {status:"meeting_requested", updatedAt: Date.now()});
+        });
+        await alertModal("만남 요청이 전송되었습니다.");
+        loadMatches();
+      };
+    });
+
+    wrap.querySelectorAll("[data-staff]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        const other = btn.getAttribute("data-staff");
+        const ok = await confirmModal("직원확인이 완료되면 매치현황은 삭제됩니다. 그래도 진행하시겠습니까?",{okText:"확인",cancelText:"취소"});
+        if(!ok) return;
+        await withLoading(async ()=>{ await clearPairData(currentUid, other); });
+        await alertModal("매치 데이터가 삭제되었습니다.");
+        loadMatches();
+      };
+    });
+  }
+
+  function statusKorean(s){
+    return s==="matched" ? "매치됨"
+      : s==="meeting_requested" ? "만남 요청 중"
+      : s==="meeting_accepted" ? "만남 성사"
+      : s;
+  }
+
+  async function clearPairData(a,b){
+    const ops = [
+      remove(r(`matches/${a}/${b}`)),
+      remove(r(`matches/${b}/${a}`)),
+      remove(r(`likes/${a}/${b}`)),
+      remove(r(`likes/${b}/${a}`)),
+      remove(r(`meetingRequests/${a}/${b}`)),
+      remove(r(`meetingRequests/${b}/${a}`)),
+      remove(r(`likeInbox/${a}/${b}`)),
+      remove(r(`likeInbox/${b}/${a}`))
+    ];
+    await Promise.all(ops);
+  }
+
+  // ===================== 실시간 리스너 =====================
+  let detachFns = [];
+  function attachRealtimeListeners(){
+    detachRealtimeListeners();
+    if(!currentUid) return;
+
+    // 내 매치 상태 변화
+    const off1 = onValue(r(`matches/${currentUid}`), snap=>{
+      if(!snap.exists()) return;
+      const data = snap.val();
+      Object.entries(data).forEach(([other, m])=>{
+        if(m && m.status==="matched" && (Date.now()-m.updatedAt)<4000){
+          alertModal(`${other}번 사용자와 MATCH가 되었습니다! 매치 현황을 확인해 주시기 바랍니다.`);
+        }
+        if(m && m.status==="meeting_accepted" && (Date.now()-m.updatedAt)<4000){
+          alertModal("만남이 성사되었습니다. 지금바로 만남을 위해 직원에게 문의하세요!");
+        }
+      });
+      if(!pages.matches.classList.contains("hidden")) loadMatches();
+    });
+    detachFns.push(()=>off1());
+
+    // 내가 받은 만남 요청 (실시간 모달)
+    const off2 = onValue(r(`meetingRequests/${currentUid}`), async snap=>{
+      if(!snap.exists()) return;
+      const reqs = snap.val();
+      for(const fromUid of Object.keys(reqs)){
+        const req = reqs[fromUid];
+        if(req.status==="pending"){
+          const accepted = await choiceModal(`${fromUid}번과의 만남 요청을 수락하시겠습니까?`);
+          if(accepted===true){
+            await update(r(`matches/${currentUid}/${fromUid}`), {status:"meeting_accepted", updatedAt: Date.now()});
+            await update(r(`matches/${fromUid}/${currentUid}`), {status:"meeting_accepted", updatedAt: Date.now()});
+            await remove(r(`meetingRequests/${currentUid}/${fromUid}`));
+            await alertModal("만남이 성사되었습니다. 지금바로 만남을 위해 직원에게 문의하세요!");
+          }else if(accepted===false){
+            await clearPairData(currentUid, fromUid);
+          }else{
+            // 보류: 나의 MATCH 페이지에서 처리 가능 (유지)
+          }
+        }
+      }
+      if(!pages.matches.classList.contains("hidden")) loadMatches();
+    });
+    detachFns.push(()=>off2());
+
+    // ✅ LIKE 수신 실시간 알림
+    const off3 = onChildAdded(r(`likeInbox/${currentUid}`), async (snap)=>{
+      const from = snap.key;
+      await alertModal("누군가에게 LIKE를 받았습니다.");
+      // 팝업 닫히면 해당 알림 플래그 제거(다시 뜨지 않도록)
+      await remove(r(`likeInbox/${currentUid}/${from}`));
+    });
+    detachFns.push(()=>off3());
+
+    // 내 한도 실시간 갱신
+    const off4 = onValue(r(`users/${currentUid}/likeRemain`), s=>{
+      if(!s.exists()) return;
+      const n = Number(s.val());
+      setRemainBadges(n);
+    });
+    detachFns.push(()=>off4());
+  }
+  function detachRealtimeListeners(){
+    detachFns.forEach(fn=>{ try{fn();}catch{} });
+    detachFns = [];
+  }
+
+  // ===================== 관리자 =====================
+  $("#admin-entry-btn").onclick = ()=> go("adminGate");
+  $("#admin-cancel").onclick = ()=> go("welcome");
+  $("#admin-login").onclick = ()=>{
+    const id = $("#admin-id").value.trim();
+    const pw = $("#admin-pw").value.trim();
+    if(id===ADMIN_ID && pw===ADMIN_PASSWORD){
+      adminLoggedIn = true;
+      $("#current-event").textContent = EVENT_ID;
+      go("admin");
+      renderAdmin();
+    }else{
+      alertModal("관리자 인증 실패");
+    }
+  };
+  $("#admin-logout").onclick = ()=>{ adminLoggedIn = false; go("welcome"); };
+
+  // 탭 전환
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.onclick = ()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+      const name = t.getAttribute("data-tab");
+      ["tab-matches","tab-accepted","tab-user"].forEach(id=>{
+        const el = $("#"+id);
+        if(id===name) show(el); else hide(el);
+      });
+      if(name==="tab-matches"||name==="tab-accepted") renderAdmin();
+    };
+  });
+
+  $("#apply-event-id").onclick = ()=>{
+    const v = $("#event-id-input").value.trim();
+    if(!v) return alertModal("이벤트 ID를 입력하세요.");
+    EVENT_ID = v;
+    localStorage.setItem("hm_event_id", EVENT_ID);
+    $("#current-event").textContent = EVENT_ID;
+    alertModal("이벤트 ID가 적용되었습니다.");
+    if(adminLoggedIn) renderAdmin();
+  };
+
+  // 관리자: 사용자 조회/설정
+  let adminUserTarget = null;
+  $("#admin-user-search-btn").onclick = async ()=>{
+    const uid = $("#admin-user-search").value.trim();
+    if(!/^\d+$/.test(uid)) return alertModal("숫자만 입력하세요.");
+    const u = await getUser(uid);
+    if(!u){ $("#admin-user-panel").classList.add("hidden"); return alertModal("해당 사용자가 없습니다."); }
+    adminUserTarget = uid;
+    $("#admin-user-panel").classList.remove("hidden");
+    await ensureLikeRemain(uid);
+    const remain = await getLikeRemain(uid);
+    $("#admin-user-remain").textContent = String(remain);
+    // 보낸/받은 LIKE 목록
+    await renderUserLikeLists(uid);
+  };
+  async function renderUserLikeLists(uid){
+    const sentBox = $("#admin-user-sent"); sentBox.innerHTML="";
+    const recvBox = $("#admin-user-recv"); recvBox.innerHTML="";
+
+    const sentSnap = await get(r(`likes/${uid}`));
+    if(sentSnap.exists()){
+      Object.keys(sentSnap.val()).sort((a,b)=>+a-+b).forEach(to=>{
+        const item = document.createElement("div");
+        item.className="list-item";
+        item.innerHTML = `
+          <div class="li-content"><strong>${uid} → ${to}</strong></div>
+          <div class="li-actions" style="gap:6px;">
+            <button class="btn small" data-del-like="${uid}|${to}">삭제</button>
+          </div>`;
+        sentBox.appendChild(item);
+      });
+    }else{
+      sentBox.innerHTML = `<div class="muted small">보낸 LIKE 없음</div>`;
+    }
+
+    // 받은 LIKE는 likes/other/{uid} 역탐색
+    const allLikes = await get(r(`likes`));
+    let hasRecv = false;
+    if(allLikes.exists()){
+      const all = allLikes.val();
+      for(const from of Object.keys(all)){
+        if(all[from] && all[from][uid]){
+          hasRecv = true;
+          const item = document.createElement("div");
+          item.className="list-item";
+          item.innerHTML = `
+            <div class="li-content"><strong>${from} → ${uid}</strong></div>
+            <div class="li-actions" style="gap:6px;">
+              <button class="btn small" data-del-like="${from}|${uid}">삭제</button>
+            </div>`;
+          recvBox.appendChild(item);
+        }
+      }
+    }
+    if(!hasRecv) recvBox.innerHTML = `<div class="muted small">받은 LIKE 없음</div>`;
+
+    // 삭제 버튼 바인딩
+    document.querySelectorAll("[data-del-like]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        const [from,to] = btn.getAttribute("data-del-like").split("|");
+        const ok = await confirmModal(`LIKE (${from}→${to})를 삭제할까요?`,{okText:"삭제"});
+        if(!ok) return;
+        await withLoading(async ()=>{
+          await remove(r(`likes/${from}/${to}`));
+          // 한도 복원은 자동으로 하지 않음(운영정책에 따라 필요시 여기에 +1 트랜잭션 가능)
+          await remove(r(`likeInbox/${to}/${from}`));
+        });
+        await renderUserLikeLists(uid);
+        await alertModal("삭제되었습니다.");
+      };
+    });
+  }
+  $("#admin-like-inc").onclick = ()=> adjustUserRemain(+1);
+  $("#admin-like-dec").onclick = ()=> adjustUserRemain(-1);
+  $("#admin-like-set5").onclick = async ()=>{
+    if(!adminUserTarget) return;
+    await runTransaction(r(`users/${adminUserTarget}/likeRemain`), ()=>5);
+    $("#admin-user-remain").textContent = "5";
+  };
+  async function adjustUserRemain(delta){
+    if(!adminUserTarget) return;
+    await runTransaction(r(`users/${adminUserTarget}/likeRemain`), (cur)=>{
+      if(cur===null||cur===undefined) cur=5;
+      const next = Math.max(0, cur+delta);
+      return next;
+    }).then(async s=>{
+      $("#admin-user-remain").textContent = String(s.snapshot.val());
+    });
+  }
+
+  // 관리자: 매치/성사 렌더
+  async function renderAdmin(){
+    await renderAdminMatches();
+    await renderAdminAccepted();
+  }
+
+  async function renderAdminMatches(){
+    const box = $("#admin-matches");
+    box.innerHTML = "";
+    let pairs = new Set();
+    let count = 0;
+
+    const all = await get(r("matches"));
+    if(!all.exists()){
+      box.innerHTML = `<div class="muted small">현재 매치 데이터가 없습니다.</div>`;
+      $("#admin-match-count").textContent = "0";
+      return;
+    }
+    const data = all.val();
+
+    for(const a of Object.keys(data)){
+      const others = data[a];
+      for(const b of Object.keys(others)){
+        const st = (others[b] && others[b].status) || "";
+        if(st==="matched" || st==="meeting_requested"){
+          const key = [Math.min(+a,+b), Math.max(+a,+b)].join("-");
+          if(pairs.has(key)) continue;
+          pairs.add(key);
+          count++;
+          const item = document.createElement("div");
+          item.className="list-item";
+          item.innerHTML = `
+            <div class="li-content">
+              <strong>${a}번 ↔ ${b}번</strong> <span class="small badge">${st==="meeting_requested"?"만남 요청 중":"매치됨"}</span>
+            </div>
+            <div class="li-actions" style="gap:6px;">
+              <button class="btn small" data-del-match="${a}|${b}">쌍 제거</button>
+            </div>`;
+          box.appendChild(item);
+        }
+      }
+    }
+    if(count===0){
+      box.innerHTML = `<div class="muted small">현재 매치된 커플이 없습니다.</div>`;
+    }
+    $("#admin-match-count").textContent = String(count);
+
+    // 개별 매치 삭제
+    box.querySelectorAll("[data-del-match]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        const [a,b] = btn.getAttribute("data-del-match").split("|");
+        const ok = await confirmModal(`${a}↔${b} 매치관련 데이터를 삭제할까요?`,{okText:"삭제"});
+        if(!ok) return;
+        await withLoading(async ()=>{ await clearPairData(a,b); });
+        await alertModal("삭제되었습니다.");
+        await renderAdminMatches();
+      };
+    });
+  }
+
+  async function renderAdminAccepted(){
+    const box = $("#admin-accepted");
+    box.innerHTML = "";
+    const all = await get(r("matches"));
+    if(!all.exists()){
+      box.innerHTML = `<div class="muted small">만남 성사된 커플이 없습니다.</div>`;
+      return;
+    }
+    const data = all.val();
+    let any = false;
+    for(const a of Object.keys(data)){
+      for(const b of Object.keys(data[a]||{})){
+        const st = data[a][b]?.status;
+        if(st==="meeting_accepted"){
+          any = true;
+          const item = document.createElement("div");
+          item.className="list-item";
+          item.innerHTML = `
+            <div class="li-content"><strong>${a}번 ↔ ${b}번</strong> <span class="small badge" style="background:#14532d;border-color:#1d7a49">만남 성사</span></div>
+            <div class="li-actions" style="gap:6px;">
+              <button class="btn small" data-del-match="${a}|${b}">쌍 제거</button>
+            </div>`;
+          box.appendChild(item);
+        }
+      }
+    }
+    if(!any){
+      box.innerHTML = `<div class="muted small">만남 성사된 커플이 없습니다.</div>`;
+    }
+    // 삭제 버튼(공용 핸들러 재사용)
+    box.querySelectorAll("[data-del-match]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        const [a,b] = btn.getAttribute("data-del-match").split("|");
+        const ok = await confirmModal(`${a}↔${b} 매치관련 데이터를 삭제할까요?`,{okText:"삭제"});
+        if(!ok) return;
+        await withLoading(async ()=>{ await clearPairData(a,b); });
+        await alertModal("삭제되었습니다.");
+        await renderAdminAccepted();
+      };
+    });
+  }
+
+  // 관리자: 전역 핸들러(삭제/초기화)
+  $("#admin-del-user").onclick = async ()=>{
+    const uid = $("#admin-del-uid").value.trim();
+    if(!uid) return alertModal("삭제할 고유번호를 입력하세요.");
+    await withLoading(async ()=>{
+      const ops = [ remove(r(`users/${uid}`)) ];
+      const likesAll = await get(r(`likes`));
+      ops.push(remove(r(`likes/${uid}`)));
+      if(likesAll.exists()){
+        const all = likesAll.val();
+        for(const from of Object.keys(all)){
+          if(all[from] && all[from][uid]){
+            ops.push(remove(r(`likes/${from}/${uid}`)));
+          }
+        }
+      }
+      const mA = await get(r(`matches/${uid}`));
+      if(mA.exists()){
+        const others = Object.keys(mA.val());
+        others.forEach(other=>{
+          ops.push(remove(r(`matches/${uid}/${other}`)));
+          ops.push(remove(r(`matches/${other}/${uid}`)));
+        });
+      }
+      ops.push(remove(r(`meetingRequests/${uid}`)));
+      const reqAll = await get(r(`meetingRequests`));
+      if(reqAll.exists()){
+        const all = reqAll.val();
+        for(const target of Object.keys(all)){
+          if(all[target] && all[target][uid]){
+            ops.push(remove(r(`meetingRequests/${target}/${uid}`)));
+          }
+        }
+      }
+      ops.push(remove(r(`likeInbox/${uid}`)));
+      const inboxAll = await get(r(`likeInbox`));
+      if(inboxAll.exists()){
+        const all = inboxAll.val();
+        for(const target of Object.keys(all)){
+          if(all[target] && all[target][uid]){
+            ops.push(remove(r(`likeInbox/${target}/${uid}`)));
+          }
+        }
+      }
+      await Promise.all(ops);
+    });
+    await alertModal("해당 사용자의 데이터가 삭제되었습니다.");
+    if(adminLoggedIn) renderAdmin();
+  };
+
+  $("#admin-reset").onclick = async ()=>{
+    const ok = await confirmModal("이 이벤트의 모든 계정과 데이터가 삭제됩니다. 되돌릴 수 없습니다.", { okText:"초기화", cancelText:"취소", title:"전체 초기화" });
+    if(!ok) return;
+    await withLoading(async ()=>{
+      await remove(r(`users`));
+      await remove(r(`likes`));
+      await remove(r(`matches`));
+      await remove(r(`meetingRequests`));
+      await remove(r(`likeInbox`));
+    });
+    await alertModal("전체 데이터 초기화가 완료되었습니다.");
+    if(adminLoggedIn) renderAdmin();
+  };
+
+  // ===================== 페이지 전환 =====================
+  function go(id){
+    Object.values(pages).forEach(hide);
+    show(pages[id]);
+    updateLoginLabels();
+  }
+
+  // 시작 페이지
+  go("welcome");
+</script>
+</body>
+</html>
